@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kash Moni AI</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img src="icons/icon48.png" alt="">
+      <div>
+        <div class="name">Kash Moni AI</div>
+        <div class="sub" id="status-line">Ready</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="icon" id="btn-new" title="New chat">＋</button>
+      <button class="icon" id="btn-history" title="Chat history">☰</button>
+      <button class="icon" id="btn-settings" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <div id="update-banner" class="update-banner hidden">⬆ A Kash Moni update is available. <button class="btn primary" data-upd-go="1" type="button">Install</button> <button class="icon" data-upd-x="1" type="button">✕</button></div>
+  <main id="messages" class="messages"></main>
+
+  <div id="confirm-bar" class="confirm hidden">
+    <div id="confirm-text"></div>
+    <div class="confirm-actions">
+      <button id="confirm-no" class="btn ghost">Deny</button>
+      <button id="confirm-yes" class="btn primary">Allow</button>
+    </div>
+  </div>
+
+  <footer class="composer">
+    <div class="chips">
+      <button id="chip-project" class="chip" title="Project" type="button">📁 General</button>
+      <button id="chip-model" class="chip" title="Model for this chat"></button>
+      <label class="chip toggle" title="Use your strong model for this message (for big or hard jobs)">
+        <input type="checkbox" id="strong"> ⚡ Strong
+      </label>
+      <span class="chip ghost" id="chip-helper" title="Workspace helper status">● Workspace</span>
+      <span class="chip ghost" id="chip-cost" title="Cost of this chat"></span>
+      <button class="chip" id="chip-speak" title="Read replies aloud" type="button">🔇</button>
+    </div>
+    <div id="attach-row" class="attach-row hidden"></div>
+    <div class="input-row">
+      <button id="btn-attach" class="attach" title="Attach images or files" type="button">📎</button>
+      <button id="btn-mic" class="attach" title="Speak your message" type="button">🎤</button>
+      <input type="file" id="file-input" multiple hidden>
+      <textarea id="input" rows="1" placeholder="Ask anything, or tell me what to build…"></textarea>
+      <button id="btn-send" class="send" title="Send (Enter)">➤</button>
+    </div>
+  </footer>
+
+  <!-- 3D viewer -->
+  <section id="view-3d" class="overlay viewer hidden">
+    <div class="overlay-head"><h2 id="v3d-title">3D model</h2>
+      <div class="row" style="margin:0">
+        <button class="btn ghost" id="v3d-reset" type="button">Reset view</button>
+        <button class="btn ghost" id="v3d-png" type="button">PNG</button>
+        <button class="btn primary" id="v3d-glb" type="button">GLB</button>
+        <button class="icon" data-close>✕</button>
+      </div>
+    </div>
+    <div id="viewer-box" class="viewer-box"></div>
+    <div class="hint">Drag to rotate · scroll or pinch to zoom · right-drag / two fingers to pan</div>
+  </section>
+
+  <!-- Full image -->
+  <section id="view-img" class="overlay hidden" style="display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92)">
+    <img id="img-full" alt="" style="max-width:100%;max-height:100%;cursor:zoom-out">
+  </section>
+
+  <!-- Projects -->
+  <section id="view-projects" class="overlay hidden">
+    <div class="overlay-head"><h2>Projects</h2><button class="icon" data-close>✕</button></div>
+    <div id="proj-list" class="history-list"></div>
+    <div class="row" style="margin-top:10px"><button class="btn ghost" id="proj-manage" type="button">Manage projects…</button></div>
+  </section>
+
+  <!-- History -->
+  <section id="view-history" class="overlay hidden">
+    <div class="overlay-head"><h2>Chats</h2><button class="icon" data-close>✕</button></div>
+    <input id="history-search" class="field" placeholder="Search chats…">
+    <label class="hint" style="display:block;margin-top:6px"><input type="checkbox" id="history-all"> Show chats from all projects</label>
+    <div id="history-list" class="history-list"></div>
+  </section>
+
+  <!-- Settings -->
+  <section id="view-settings" class="overlay hidden">
+    <div class="overlay-head"><h2>Settings</h2><button class="icon" data-close>✕</button></div>
+    <div class="form">
+      <h3>OpenRouter</h3>
+      <label>API key<input id="s-apiKey" class="field" type="password" placeholder="sk-or-v1-…" autocomplete="off"></label>
+      <label>Main model<input id="s-model" class="field" list="model-list" placeholder="deepseek/deepseek-v4.1-flash"></label>
+      <label>Strong model (⚡ button)<input id="s-strongModel" class="field" list="model-list" placeholder="pick a stronger model for big jobs"></label>
+      <datalist id="model-list"></datalist>
+      <div class="row">
+        <button class="btn ghost" id="s-load-models">Load model list</button>
+        <button class="btn ghost" id="s-test-key">Test key & balance</button>
+      </div>
+      <div class="hint" id="s-key-result"></div>
+      <label>Thinking effort
+        <select id="s-reasoning" class="field">
+          <option value="default">Model default</option>
+          <option value="low">Low (faster, cheaper)</option>
+          <option value="medium">Medium</option>
+          <option value="high">High (smarter, slower)</option>
+        </select>
+      </label>
+
+      <h3>Images</h3>
+      <label>Image model<input id="s-imageModel" class="field" placeholder="google/gemini-3.1-flash-image"></label>
+      <div class="hint">Used for "make an image…" requests. Others: x-ai/grok-imagine-image-2.0, openai/gpt-image-2, black-forest-labs/flux.2-pro</div>
+
+      <h3>Workspace helper</h3>
+      <label>Address<input id="s-helperUrl" class="field" placeholder="http://127.0.0.1:8765"></label>
+      <label>Token<input id="s-helperToken" class="field" type="password" placeholder="printed when the helper starts" autocomplete="off"></label>
+      <div class="row"><button class="btn ghost" id="s-test-helper">Test helper</button></div>
+      <div class="hint" id="s-helper-result"></div>
+
+
+      <h3>Connections</h3>
+      <div class="hint">Link services with an API token. Kash Moni can then use them (e.g. create GitHub repos, push code, deploy). Tokens stay on this device and are never shown to the AI.</div>
+      <div id="conn-list"></div>
+      <div class="row">
+        <select id="conn-preset" class="field" style="flex:1;margin-top:0">
+          <option value="github">GitHub</option>
+          <option value="vercel">Vercel</option>
+          <option value="netlify">Netlify</option>
+          <option value="supabase">Supabase</option>
+          <option value="cloudflare">Cloudflare</option>
+          <option value="telegram">Telegram bot</option>
+          <option value="custom">Other (custom API)</option>
+        </select>
+        <button class="btn ghost" id="conn-add">Add</button>
+      </div>
+      <div id="conn-form" class="conn-form hidden">
+        <label>Name<input id="c-name" class="field"></label>
+        <label>API base URL<input id="c-baseUrl" class="field" placeholder="https://api.example.com"></label>
+        <label>Token<input id="c-token" class="field" type="password" autocomplete="off"></label>
+        <div class="hint" id="c-help"></div>
+        <details><summary class="hint" style="cursor:pointer">Advanced</summary>
+          <label>Auth header (or URL if the token goes in the URL as {token})<input id="c-headerName" class="field" placeholder="Authorization"></label>
+          <label>Header prefix<input id="c-headerPrefix" class="field" placeholder="Bearer "></label>
+          <label>Also give workspace commands this env var (comma-separated)<input id="c-envVar" class="field" placeholder="GITHUB_TOKEN"></label>
+          <label>Notes for the AI<input id="c-notes" class="field"></label>
+        </details>
+        <div class="row"><button class="btn primary" id="conn-save">Save connection</button><button class="btn ghost" id="conn-test">Test</button><button class="btn ghost" id="conn-cancel">Cancel</button></div>
+        <div class="hint" id="c-result"></div>
+      </div>
+      <h3 id="pj-section">Projects</h3>
+      <div id="pj-list"></div>
+      <div class="row"><button class="btn ghost" id="pj-add" type="button">Add project</button></div>
+      <div id="pj-form" class="conn-form hidden">
+        <label>Name<input id="pj-name" class="field" placeholder="e.g. Bakery app"></label>
+        <label>Workspace folder<input id="pj-folder" class="field" placeholder="e.g. bakery-app"></label>
+        <label>Instructions for this project<textarea id="pj-instr" class="field" rows="3" placeholder="e.g. Use React + Tailwind. Brand colour #E07A1F."></textarea></label>
+        <div class="row"><button class="btn primary" id="pj-save" type="button">Save project</button><button class="btn ghost" id="pj-cancel" type="button">Cancel</button></div>
+      </div>
+
+      <h3>Memory</h3>
+      <label>Long-term memory
+        <select id="s-memoryOn" class="field">
+          <option value="on">On - remember things between chats</option>
+          <option value="off">Off</option>
+        </select>
+      </label>
+      <div id="mem-list"></div>
+      <div class="row"><input id="mem-new" class="field" placeholder="Add something for it to remember…" style="flex:1;margin-top:0"><button class="btn ghost" id="mem-add" type="button">Add</button></div>
+
+      <h3>Spending</h3>
+      <div id="usage-box"></div>
+      <label>Daily budget in $ (0 = no limit)<input id="s-dailyBudget" class="field" inputmode="decimal"></label>
+      <label>Monthly budget in $ (0 = no limit)<input id="s-monthlyBudget" class="field" inputmode="decimal"></label>
+      <label>Ask me every time a task costs another $… (0 = never)<input id="s-taskWarn" class="field" inputmode="decimal"></label>
+
+      <h3>Reliability</h3>
+      <label>Fallback model (used when the main model fails or is overloaded)<input id="s-fallbackModel" class="field" list="model-list" placeholder="deepseek/deepseek-v4-pro"></label>
+      <label>Summarise long chats after about … tokens<input id="s-compactAt" class="field" inputmode="numeric" placeholder="60000"></label>
+
+      <h3>Web search</h3>
+      <label>Search engine
+        <select id="s-searchProvider" class="field">
+          <option value="duckduckgo">DuckDuckGo (free, no key)</option>
+          <option value="brave">Brave Search API (free key at brave.com/search/api)</option>
+          <option value="tavily">Tavily (free key at tavily.com)</option>
+        </select>
+      </label>
+      <label>Search API key<input id="s-searchKey" class="field" type="password" autocomplete="off"></label>
+
+      <h3>Updates</h3>
+      <label>Update from GitHub repo<input id="s-updateRepo" class="field" placeholder="owner/repo"></label>
+      <div class="row">
+        <button class="btn ghost" id="upd-check" type="button">Check for updates</button>
+        <button class="btn primary" id="upd-install" type="button" disabled>Install update</button>
+        <button class="btn ghost" id="upd-rollback" type="button">Undo last update</button>
+      </div>
+      <div class="hint" id="upd-result"></div>
+      <div class="hint">To change Kash Moni itself, just ask it in chat (e.g. "add a button that…"). It edits its own code on GitHub; then install the update here.</div>
+
+      <h3>Backup</h3>
+      <label class="hint" style="display:block"><input type="checkbox" id="bk-keys"> Include API keys and tokens</label>
+      <div class="row">
+        <button class="btn ghost" id="bk-export" type="button">Save backup file</button>
+        <button class="btn ghost" id="bk-import" type="button">Restore from file</button>
+        <input type="file" id="bk-file" accept=".json,application/json" hidden>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="bk-gh-save" type="button">Back up to GitHub</button>
+        <button class="btn ghost" id="bk-gh-restore" type="button">Restore from GitHub</button>
+      </div>
+      <div class="hint" id="bk-result">GitHub backups go to a private repo "kashmoni-backup" (needs the GitHub connection).</div>
+
+      <h3>Behaviour</h3>
+      <label>Ask before actions
+        <select id="s-confirmMode" class="field">
+          <option value="never">Never ask - full permission</option>
+          <option value="risky">Only risky ones (pay, send, delete, submit…)</option>
+          <option value="always">Every action</option>
+        </select>
+      </label>
+      <label>Max steps per task<input id="s-maxSteps" class="field" type="number" min="5" max="200"></label>
+      <label>Custom instructions<textarea id="s-customInstructions" class="field" rows="4" placeholder="e.g. Call me Kash. Prefer Python. Explain simply."></textarea></label>
+      <div class="row">
+        <button class="btn primary" id="s-save">Save</button>
+        <button class="btn ghost danger" id="s-clear">Delete all chats</button>
+      </div>
+      <div class="hint">Your key and chats are stored only in this browser.</div>
+    </div>
+  </section>
+
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Kash Moni AI",
+  "short_name": "Kash Moni",
+  "version": "1.4.0",
+  "description": "Your own AI agent: chats, inspects and drives your browser, and builds apps in your workspace. Powered by OpenRouter.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv5hPUbcm7VOLFhoA2FQJ9PpDZKzGfyc8nSJZPHLzTnyAYoHe43gckMQbmAL+F1Yqm8P41EbEDAB+HChG5l1SorKLJxqOooQhlnZbkgjAfB6tJ+Ok/yrA5JSAXb2zlEIR8TpYVN/uGUZXrr2r5DHhQjUQhdKCki8nh7q2Bs/e4roET0fUw1kuZi/7uzIFWvejnEc9L8evfPcRq/2W4rZs6cnkGpI2LBflT1aMUdRzqItO8Rt2yaRTIz1WY2p28LDCDkUnQLt5Psx4jWuprKpEe5Vgu768UEVEfd2GfH8oGDP1Tdhi1rjqZQmLyMcZcC/E5QO/n08CE4QPZRfPjxU/PQIDAQAB",
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "unlimitedStorage",
+    "tabs",
+    "scripting",
+    "debugger",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Open Kash Moni AI",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+K"
+      },
+      "description": "Open Kash Moni AI"
+    }
+  },
+  "sandbox": {
+    "pages": [
+      "viewer.html"
+    ]
+  }
+}
