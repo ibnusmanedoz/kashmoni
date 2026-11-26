@@ -16,7 +16,7 @@ pc/
 
 ## 1. Install the extension (one time)
 
-1. Get the code with `git clone https://github.com/ibnusmanedoz/kashmoni-android.git ~/kashmoni` (see the main README.md).
+1. Get the code with `git clone https://github.com/ibnusmanedoz/kashmoni.git ~/kashmoni` (see the main README.md).
 2. In Brave, go to **brave://extensions**.
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and choose the `kashmoni/pc/extension` folder.

@@ -1868,7 +1868,7 @@ ${r.text ? "PAGE TEXT:\n" + r.text : ""}`;
     searchProvider: "duckduckgo",
     searchKey: "",
     speakReplies: false,
-    updateRepo: "ibnusmanedoz/kashmoni-android",
+    updateRepo: "ibnusmanedoz/kashmoni",
     projects: [],
     activeProject: "",
     usage: { days: {} }

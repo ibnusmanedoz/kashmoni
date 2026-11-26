@@ -27,7 +27,7 @@ tools/          Build helpers
 
 ```bash
 sudo apt install -y git python3 nodejs npm
-cd ~ && git clone https://github.com/ibnusmanedoz/kashmoni-android.git kashmoni
+cd ~ && git clone https://github.com/ibnusmanedoz/kashmoni.git kashmoni
 ```
 
 1. In Brave, go to **brave://extensions**, turn on **Developer mode**, click **Load unpacked**, and choose `~/kashmoni/pc/extension`.
@@ -46,8 +46,8 @@ cd ~ && git clone https://github.com/ibnusmanedoz/kashmoni-android.git kashmoni
 3. **Optional, to build apps on the phone:** install **Termux** from F-Droid, then run:
    ```bash
    pkg update -y && mkdir -p ~/kashmoni-setup && cd ~/kashmoni-setup
-   curl -LO https://raw.githubusercontent.com/ibnusmanedoz/kashmoni-android/main/termux/kashmoni_helper.py
-   curl -LO https://raw.githubusercontent.com/ibnusmanedoz/kashmoni-android/main/termux/setup.sh
+   curl -LO https://raw.githubusercontent.com/ibnusmanedoz/kashmoni/main/termux/kashmoni_helper.py
+   curl -LO https://raw.githubusercontent.com/ibnusmanedoz/kashmoni/main/termux/setup.sh
    bash setup.sh
    kashmoni
    ```
